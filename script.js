@@ -70,7 +70,7 @@ document.querySelectorAll(".reveal").forEach((element) => {
   const ctx = canvas.getContext("2d");
   let mx = -9999, my = -9999;
   const RADIUS = 400;
-  const BG = "rgba(7, 11, 20, 0.88)";
+  const BG = "rgba(5, 7, 12, 0.88)";
 
   function resize() {
     canvas.width  = window.innerWidth;
