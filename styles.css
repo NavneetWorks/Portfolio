@@ -63,13 +63,12 @@ img {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;          /* lowest layer */
+  z-index: 0;
   pointer-events: none;
 }
 
 /* ============================================
-   HEADER — transparent so particles show
-   through, but sits ABOVE the canvas
+   HEADER
    ============================================ */
 .header {
   align-items: center;
@@ -81,6 +80,7 @@ img {
   position: relative;
   z-index: 100;
 }
+
 .logo {
   align-items: center;
   display: inline-flex;
@@ -170,7 +170,7 @@ img {
 }
 
 /* ============================================
-   ALL SECTIONS — must sit above canvas
+   ALL SECTIONS
    ============================================ */
 .section {
   margin: 0 auto;
@@ -184,7 +184,7 @@ img {
   align-items: center;
   display: grid;
   gap: clamp(24px, 3.6vw, 62px);
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.82fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
   min-height: calc(100vh - 96px);
   padding-top: 28px;
   position: relative;
@@ -200,7 +200,7 @@ p {
 }
 
 h1 {
-  font-size: clamp(2.7rem, 5.4vw, 4.8rem);
+  font-size: clamp(2rem, 5.4vw, 4.8rem);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.1;
@@ -208,7 +208,7 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+  font-size: clamp(2rem, 5.5vw, 4.8rem);
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.08;
@@ -222,7 +222,7 @@ h3 {
 
 .hero-text {
   color: var(--text);
-  font-size: clamp(1.15rem, 2vw, 1.78rem);
+  font-size: clamp(1rem, 2vw, 1.78rem);
   line-height: 1.35;
   margin: 0 0 6px;
   max-width: 820px;
@@ -299,6 +299,11 @@ h3 {
   overflow: hidden;
   position: relative;
   width: min(100%, 680px);
+}
+
+/* Fix: remove the inline left:40px on mobile via a wrapper override */
+.hero-art lottie-player {
+  left: 0 !important;
 }
 
 .hero-svg {
@@ -444,20 +449,50 @@ h3 {
   65% { transform: translate(28px, -16px) rotate(-12deg); }
 }
 
+/* ============================================
+   TWO-COL GRID SECTIONS
+   ============================================ */
 .skills-section,
 .proficiency,
 .contact {
   align-items: center;
   display: grid;
   gap: clamp(44px, 6vw, 110px);
-  grid-template-columns: minmax(380px, 0.82fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
 }
 
-.typing-scene {
-  aspect-ratio: 1.08;
-  min-height: 560px;
-  position: relative;
+/* Wrap the typing-scene so its scaled size affects layout */
+.skills-section > .typing-scene {
+  justify-self: center;
 }
+
+/* -----------------------------------------------
+   TYPING SCENE
+   Design canvas: 560 × 520 px.
+   All inner absolute-px elements are sized for this.
+   JS sets --typing-scale on the element at runtime.
+   The .typing-scene-clip wrapper (created by JS) clips
+   overflow and collapses height so layout stays tight.
+   ----------------------------------------------- */
+.typing-scene {
+  height: 520px;
+  min-height: 0;
+  position: relative;
+  width: 560px;
+  flex-shrink: 0;
+  transform-origin: top left;
+  transform: scale(var(--typing-scale, 1));
+  /* margin-bottom compensates for the height not used after scaling */
+  margin-bottom: calc((var(--typing-scale, 1) - 1) * 520px);
+}
+
+/* Clip wrapper injected by JS */
+.typing-scene-clip {
+  overflow: hidden;
+  width: 100%;
+  /* height is set by JS to match scaled height */
+}
+
 
 .bubble {
   align-items: center;
@@ -652,8 +687,8 @@ h3 {
 .skill-icons {
   align-items: start;
   display: grid;
-  gap: 32px clamp(34px, 7vw, 72px);
-  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 32px clamp(16px, 4vw, 72px);
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
   max-width: 1000px;
 }
 
@@ -695,19 +730,23 @@ h3 {
 .feature-list li {
   align-items: flex-start;
   display: flex;
-  font-size: 1.18rem;
+  font-size: clamp(0.95rem, 1.8vw, 1.18rem);
   gap: 10px;
 }
 
 .feature-list img {
+  flex-shrink: 0;
   height: 24px;
   margin-top: 1px;
   width: 24px;
 }
 
+/* ============================================
+   PROFICIENCY
+   ============================================ */
 .proficiency {
   align-items: center;
-  grid-template-columns: 1fr 0.72fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
   padding-top: 80px;
 }
 
@@ -746,14 +785,17 @@ h3 {
 .proficiency-art {
   min-height: 340px;
   position: relative;
+  overflow: hidden;
 }
 
+/* Screen: use max-width so it shrinks on smaller containers */
 .screen {
   background: #f7f5f4;
   border: 7px solid #050505;
   border-radius: 12px;
   height: 210px;
   margin-top: 40px;
+  max-width: 100%;
   position: relative;
   width: 430px;
 }
@@ -825,6 +867,9 @@ h3 {
   50% { opacity: 1; scale: 1.2; }
 }
 
+/* ============================================
+   EDUCATION
+   ============================================ */
 .education-row {
   border-bottom: 2px solid var(--line);
   display: grid;
@@ -849,7 +894,7 @@ h3 {
 }
 
 .education h3 {
-  font-size: 1.75rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.75rem);
 }
 
 .education h4 {
@@ -866,6 +911,9 @@ h3 {
   color: var(--text);
 }
 
+/* ============================================
+   EXPERIENCE
+   ============================================ */
 .experience-grid {
   display: grid;
   gap: 18px;
@@ -929,6 +977,9 @@ h3 {
   padding: 0 30px 34px 48px;
 }
 
+/* ============================================
+   PROJECTS
+   ============================================ */
 .hero-svg {
   color: var(--color-text, #07003A);
 }
@@ -984,8 +1035,11 @@ h3 {
 .project-logo.uni { background: linear-gradient(135deg, #f97316, #2563eb); color: #fff; }
 .project-logo.video { background: linear-gradient(135deg, #111827, #9333ea); color: #fff; }
 
+/* ============================================
+   CONTACT
+   ============================================ */
 .contact {
-  grid-template-columns: minmax(0, 1fr) 0.8fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
 }
 
 .contact h2 {
@@ -1001,9 +1055,10 @@ h3 {
 
 .email {
   display: inline-block;
-  font-size: clamp(1.35rem, 3vw, 2.35rem);
+  font-size: clamp(1rem, 3vw, 2.35rem);
   margin: 6px 0 26px;
   text-decoration: none;
+  word-break: break-all;
 }
 
 .email:hover {
@@ -1091,6 +1146,9 @@ h3 {
   width: 48px;
 }
 
+/* ============================================
+   BACK TO TOP
+   ============================================ */
 .to-top {
   align-items: center;
   background: var(--purple);
@@ -1132,6 +1190,9 @@ footer {
   z-index: 2;
 }
 
+/* ============================================
+   REVEAL ANIMATION
+   ============================================ */
 .reveal {
   opacity: 0;
   transform: translateY(26px);
@@ -1169,7 +1230,7 @@ footer {
 }
 
 /* ============================================
-   RESPONSIVE
+   RESPONSIVE — 1180px (tablet landscape)
    ============================================ */
 @media (max-width: 1180px) {
   .hero,
@@ -1187,11 +1248,15 @@ footer {
     justify-content: center;
   }
 
-  .hero-art,
-  .typing-scene {
+  .hero-art {
     margin: 0 auto;
-    max-width: 720px;
+    max-width: 560px;
     width: 100%;
+  }
+
+  /* Lottie left offset only on desktop */
+  .hero-art lottie-player {
+    left: 0 !important;
   }
 
   .experience-grid,
@@ -1207,8 +1272,15 @@ footer {
   .contact-copy {
     text-align: center;
   }
+
+  .proficiency-art {
+    display: none;
+  }
 }
 
+/* ============================================
+   RESPONSIVE — 820px (tablet portrait / large phones)
+   ============================================ */
 @media (max-width: 820px) {
   body {
     font-size: 16px;
@@ -1237,7 +1309,6 @@ footer {
     right: 20px;
     top: 74px;
     width: min(310px, calc(100vw - 40px));
-    /* dropdown sits above particles */
     z-index: 30;
   }
 
@@ -1254,14 +1325,19 @@ footer {
   }
 
   .section {
-    padding: 70px 24px;
+    padding: 60px 20px;
   }
 
-  .hero-art,
-  .typing-scene {
-    min-height: 420px;
-    scale: 0.78;
-    transform-origin: top center;
+  .hero {
+    min-height: auto;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .hero-art {
+    aspect-ratio: 1;
+    max-width: 380px;
+    min-height: 0;
   }
 
   .project-grid,
@@ -1277,26 +1353,122 @@ footer {
   .school-badge {
     margin: 0 auto;
   }
-}
 
-@media (max-width: 520px) {
   .wave-hand {
-    height: 46px;
-    width: 46px;
+    height: 52px;
+    width: 52px;
   }
 
-  .button {
-    width: 100%;
+  h1 {
+    font-size: clamp(1.7rem, 7vw, 2.8rem);
   }
 
-  .hero-art,
-  .typing-scene {
-    margin-bottom: -110px;
-    min-height: 360px;
-    scale: 0.62;
+  h2 {
+    font-size: clamp(1.7rem, 7vw, 2.8rem);
+  }
+
+  .bar p {
+    font-size: 1.1rem;
   }
 
   .portfolio-card {
-    min-height: 330px;
+    min-height: auto;
+    padding: 32px 20px 24px;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — 520px (phones)
+   ============================================ */
+@media (max-width: 520px) {
+  .wave-hand {
+    height: 40px;
+    width: 40px;
+    vertical-align: -8px;
+  }
+
+  .button {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .hero-art {
+    max-width: 300px;
+  }
+
+  .portfolio-card {
+    min-height: 300px;
+  }
+
+  .project-logo {
+    height: 96px;
+    width: 96px;
+    font-size: 1.5rem;
+  }
+
+  .skill-icons {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 20px clamp(12px, 3vw, 32px);
+  }
+
+  .skill-icons span {
+    font-size: 2rem;
+    min-height: 70px;
+  }
+
+  .contact h2 {
+    flex-wrap: wrap;
+    font-size: 1.8rem;
+  }
+
+  .contact h2 img {
+    height: 44px;
+    width: 44px;
+  }
+
+  .mail-art {
+    display: none;
+  }
+
+  .experience-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .experience-card ul {
+    font-size: 0.9rem;
+    padding: 0 16px 24px 30px;
+  }
+
+  .education h3 {
+    font-size: 1.1rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — 380px (small phones like SE)
+   ============================================ */
+@media (max-width: 380px) {
+  .section {
+    padding: 50px 16px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .hero-art {
+    max-width: 260px;
+  }
+
+  .skill-icons {
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
   }
 }

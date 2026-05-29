@@ -48,19 +48,13 @@ document.querySelectorAll(".reveal").forEach((element) => {
 });
 
 /* ============================================================
-   SPOTLIGHT OVERLAY — pure canvas, no tsParticles dependency
-   Strategy:
-     1. Particles are rendered bright (opacity 0.5–0.8)
-     2. A fixed canvas sits ON TOP of particles (z-index: 1)
-        and paints a dark semi-transparent rectangle over
-        the ENTIRE screen every frame
-     3. Then we ERASE a circular hole at the mouse position
-        using "destination-out" on a second pass so the
-        particles show through only near the cursor
-   Result: dark everywhere, lit circle follows the mouse
-   Works at any scroll depth because we use clientX/clientY
+   SPOTLIGHT OVERLAY — pure canvas
+   On touch devices the spotlight is disabled (no cursor to follow)
    ============================================================ */
 (function initSpotlight() {
+  // Detect touch-only devices — skip spotlight, it's not useful there
+  const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
   const canvas = document.createElement("canvas");
   canvas.style.cssText = `
     position: fixed;
@@ -76,7 +70,7 @@ document.querySelectorAll(".reveal").forEach((element) => {
   const ctx = canvas.getContext("2d");
   let mx = -9999, my = -9999;
   const RADIUS = 400;
-  const BG = "rgba(7, 11, 20, 0.88)"; // matches body background
+  const BG = "rgba(7, 11, 20, 0.88)";
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -85,34 +79,44 @@ document.querySelectorAll(".reveal").forEach((element) => {
   resize();
   window.addEventListener("resize", resize);
 
-  window.addEventListener("mousemove", (e) => {
-    mx = e.clientX;
-    my = e.clientY;
-  });
-  window.addEventListener("mouseleave", () => {
-    mx = -9999; my = -9999;
-  });
+  if (!isTouchOnly) {
+    // Mouse devices: spotlight follows cursor
+    window.addEventListener("mousemove", (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+    window.addEventListener("mouseleave", () => {
+      mx = -9999; my = -9999;
+    });
+  }
 
   function frame() {
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    // Step 1: fill entire canvas with the dark overlay
-   // Step 1: fill entire canvas with the dark overlay
-    // but SKIP the header area (first 96px) so it's never dimmed
-    const headerHeight = document.querySelector(".header").offsetHeight;
+    const headerEl = document.querySelector(".header");
+    const headerHeight = headerEl ? headerEl.offsetHeight : 0;
+
+    if (isTouchOnly) {
+      // On touch: just draw a lighter static overlay so particles are still visible
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "rgba(7, 11, 20, 0.55)";
+      ctx.fillRect(0, headerHeight, w, h - headerHeight);
+      requestAnimationFrame(frame);
+      return;
+    }
+
+    // Step 1: dark overlay (skip header)
     ctx.globalCompositeOperation = "source-over";
     ctx.fillStyle = BG;
     ctx.fillRect(0, headerHeight, w, h - headerHeight);
 
-    // Step 2: punch a transparent circle at the mouse
-    // "destination-out" erases pixels proportional to alpha
+    // Step 2: punch transparent circle at mouse
     if (mx > -100) {
       const grad = ctx.createRadialGradient(mx, my, 0, mx, my, RADIUS);
-      // Center fully erased → edges blend back to solid dark
-    grad.addColorStop(0,   "rgba(0,0,0,0.85)");  // slightly dimmed even at cursor
-grad.addColorStop(0.5, "rgba(0,0,0,0.6)");   // soft mid fade
-grad.addColorStop(1,   "rgba(0,0,0,0)");     // no erase at edge
+      grad.addColorStop(0,   "rgba(0,0,0,0.85)");
+      grad.addColorStop(0.5, "rgba(0,0,0,0.6)");
+      grad.addColorStop(1,   "rgba(0,0,0,0)");
 
       ctx.globalCompositeOperation = "destination-out";
       ctx.fillStyle = grad;
@@ -121,7 +125,7 @@ grad.addColorStop(1,   "rgba(0,0,0,0)");     // no erase at edge
       ctx.fill();
     }
 
-    // Step 3: add a faint purple tint bloom at cursor on top
+    // Step 3: purple tint bloom at cursor
     if (mx > -100) {
       ctx.globalCompositeOperation = "source-over";
       const bloom = ctx.createRadialGradient(mx, my, 0, mx, my, RADIUS * 0.7);
@@ -141,11 +145,55 @@ grad.addColorStop(1,   "rgba(0,0,0,0)");     // no erase at edge
 })();
 
 /* ============================================================
-   TSPARTICLES — bright so they show through the spotlight hole
+   ILLUSTRATION SCALER
+   Typing scene is a fixed 560×520px CSS canvas.
+   Hero art is a responsive container that lottie fills natively.
+   We watch the section width and scale the typing-scene so it
+   always fits without overflow, on every viewport size.
    ============================================================ */
+(function initIllustrationScaler() {
+  const SCENE_W = 560;   // design width of .typing-scene
+  const SCENE_H = 520;   // design height of .typing-scene
+  const MAX_SCALE = 1;   // never upscale beyond natural size
+  const PADDING = 40;    // breathing room on each side (px)
+
+  const scene = document.querySelector(".typing-scene");
+  if (!scene) return;
+
+  // Wrap scene in a clip div to hide overflow + collapse height
+  const clip = document.createElement("div");
+  clip.className = "typing-scene-clip";
+  scene.parentNode.insertBefore(clip, scene);
+  clip.appendChild(scene);
+
+  function updateScale() {
+    // Available width = clip wrapper width (same as section column)
+    const available = clip.offsetWidth - PADDING;
+    const scale = Math.min(MAX_SCALE, available / SCENE_W);
+    const scaledH = Math.round(SCENE_H * scale);
+
+    scene.style.setProperty("--typing-scale", scale);
+    // Also set transform directly so it works even without CSS var support
+    scene.style.transform = `scale(${scale})`;
+    scene.style.marginBottom = `${(scale - 1) * SCENE_H}px`;
+    // Set clip height so it collapses to actual rendered height
+    clip.style.height = scaledH + "px";
+  }
+
+  // Run on load and on any resize
+  updateScale();
+  const ro = new ResizeObserver(updateScale);
+  ro.observe(clip);
+  window.addEventListener("resize", updateScale);
+})();
+
+
 document.addEventListener("DOMContentLoaded", function () {
   const container = document.getElementById("tsparticles");
   if (!container) return;
+
+  // Reduce particle count on mobile for better performance
+  const isMobile = window.innerWidth < 820;
 
   tsParticles.load("tsparticles", {
     fullScreen: { enable: false },
@@ -155,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
       detectsOn: "window",
       events: {
         onHover: {
-          enable: true,
+          enable: !isMobile,
           mode: "grab",
         },
         resize: true,
@@ -189,10 +237,9 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       number: {
         density: { enable: true, area: 850 },
-        value: 75,
+        value: isMobile ? 35 : 75,
       },
       opacity: {
-        // Bright — the overlay canvas darkens them outside the spotlight
         value: { min: 0.5, max: 0.85 },
         animation: {
           enable: true,
