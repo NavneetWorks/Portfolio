@@ -70,7 +70,7 @@ document.querySelectorAll(".reveal").forEach((element) => {
   const ctx = canvas.getContext("2d");
   let mx = -9999, my = -9999;
   const RADIUS = 400;
-  const BG = "rgba(5, 7, 12, 0.88)";
+  const BG = "rgba(0, 0, 0, 0.88)";
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -187,73 +187,270 @@ document.querySelectorAll(".reveal").forEach((element) => {
   window.addEventListener("resize", updateScale);
 })();
 
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. DOM Elements & Theme Initialization
+  const root = document.documentElement;
+  const nav = document.querySelector("[data-nav]");
+  const navToggle = document.querySelector("[data-nav-toggle]");
+  const themeToggle = document.querySelector("[data-theme-toggle]");
+  const toTop = document.querySelector("[data-to-top]");
+  const storedTheme = localStorage.getItem("theme");
 
-document.addEventListener("DOMContentLoaded", function () {
-  const container = document.getElementById("tsparticles");
-  if (!container) return;
+  root.dataset.theme = storedTheme || "dark";
 
-  // Reduce particle count on mobile for better performance
-  const isMobile = window.innerWidth < 820;
-
-  tsParticles.load("tsparticles", {
-    fullScreen: { enable: false },
-    fpsLimit: 60,
-
-    interactivity: {
-      detectsOn: "window",
-      events: {
-        onHover: {
-          enable: !isMobile,
-          mode: "grab",
-        },
-        resize: true,
-      },
-      modes: {
-        grab: {
-          distance: 180,
-          links: { opacity: 1, color: "#7c3aed" },
-        },
-      },
-    },
-
-    particles: {
-      color: {
-        value: ["#8b5cf6", "#5bc8f5", "#c4b5fd", "#ffffff"],
-      },
-      links: {
-        color: "#7c3aed",
-        distance: 150,
-        enable: true,
-        opacity: 0.55,
-        width: 1.2,
-      },
-      move: {
-        direction: "none",
-        enable: true,
-        outModes: { default: "bounce" },
-        random: true,
-        speed: 0.9,
-        straight: false,
-      },
-      number: {
-        density: { enable: true, area: 850 },
-        value: isMobile ? 35 : 75,
-      },
-      opacity: {
-        value: { min: 0.5, max: 0.85 },
-        animation: {
-          enable: true,
-          speed: 0.6,
-          minimumValue: 0.3,
-          sync: false,
-        },
-      },
-      shape: { type: "circle" },
-      size: {
-        value: { min: 1.5, max: 3.5 },
-      },
-    },
-
-    detectRetina: true,
+  // 2. Event Listeners
+  navToggle.addEventListener("click", () => {
+    nav.classList.toggle("open");
   });
+
+  nav.addEventListener("click", (event) => {
+    if (event.target.matches("a")) {
+      nav.classList.remove("open");
+    }
+  });
+
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = nextTheme;
+    localStorage.setItem("theme", nextTheme);
+  });
+
+  toTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  window.addEventListener("scroll", () => {
+    toTop.classList.toggle("visible", window.scrollY > 560);
+  });
+
+  // 3. Intersection Observers (Reveal & Performance)
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.14 }
+  );
+
+  document.querySelectorAll(".reveal").forEach((element) => {
+    revealObserver.observe(element);
+  });
+
+  // NEW: Performance Observer to pause animations when out of viewport
+  const animObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Find all animated elements within this section
+      const animElements = entry.target.querySelectorAll(
+        '.wave-hand, .hero-wave, .butterfly, .coder-arm, .coder-hand, .robot-arm, .spark'
+      );
+      
+      if (entry.isIntersecting) {
+        animElements.forEach(el => el.style.animationPlayState = 'running');
+      } else {
+        animElements.forEach(el => el.style.animationPlayState = 'paused');
+      }
+    });
+  }, { threshold: 0 });
+
+  document.querySelectorAll('.section').forEach((section) => {
+    animObserver.observe(section);
+  });
+
+  // 4. Spotlight Overlay (Canvas)
+  (function initSpotlight() {
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const canvas = document.createElement("canvas");
+    
+    canvas.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    `;
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    let mx = -9999, my = -9999;
+    const RADIUS = 600;
+    const BG = "rgba(0, 0, 0, 0.88)";
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (!isTouchOnly) {
+      window.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+      });
+      window.addEventListener("mouseleave", () => {
+        mx = -9999; my = -9999;
+      });
+    }
+
+    function frame() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const headerEl = document.querySelector(".header");
+      const headerHeight = headerEl ? headerEl.offsetHeight : 0;
+
+      if (isTouchOnly) {
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "rgba(7, 11, 20, 0.55)";
+        ctx.fillRect(0, headerHeight, w, h - headerHeight);
+        requestAnimationFrame(frame);
+        return;
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.fillStyle = BG;
+      ctx.fillRect(0, headerHeight, w, h - headerHeight);
+
+      // Step 2: punch transparent circle at mouse (Smooth fade to black)
+    if (mx > -100) {
+      const grad = ctx.createRadialGradient(mx, my, 0, mx, my, RADIUS);
+      grad.addColorStop(0,   "rgba(0,0,0,1)");     // Pure cutout at center
+      grad.addColorStop(0.2, "rgba(0,0,0,0.8)");   // Start fading
+      grad.addColorStop(0.5, "rgba(0,0,0,0.4)");   // Mid fade
+      grad.addColorStop(0.8, "rgba(0,0,0,0.1)");   // Outer edge fade
+      grad.addColorStop(1,   "rgba(0,0,0,0)");     // Solid black outside
+
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(mx, my, RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Step 3: Faint tint bloom at cursor (Barely there white/blue)
+   // Step 3: Custom bloom (90% white, 10% icy blue fade)
+    if (mx > -100) {
+      ctx.globalCompositeOperation = "source-over";
+      // Slightly larger radius for a smoother, slower fade
+      const bloom = ctx.createRadialGradient(mx, my, 0, mx, my, RADIUS * 0.65);
+      
+      // Brighter, icy white center
+      bloom.addColorStop(0,   "rgba(240, 250, 255, 0.06)"); 
+      
+      // Very slow fade outward ("little little" fading)
+      bloom.addColorStop(0.3, "rgba(240, 250, 255, 0.03)"); 
+      bloom.addColorStop(0.6, "rgba(240, 250, 255, 0.01)"); 
+      
+      // Completely disappears
+      bloom.addColorStop(1,   "rgba(0, 0, 0, 0)");
+      
+      ctx.fillStyle = bloom;
+      ctx.beginPath();
+      ctx.arc(mx, my, RADIUS * 0.65, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+      requestAnimationFrame(frame);
+    }
+    frame();
+  })();
+
+  // 5. Illustration Scaler
+  (function initIllustrationScaler() {
+    const SCENE_W = 560;   
+    const SCENE_H = 520;   
+    const MAX_SCALE = 1;   
+    const PADDING = 40;    
+
+    const scene = document.querySelector(".typing-scene");
+    if (!scene) return;
+
+    const clip = document.createElement("div");
+    clip.className = "typing-scene-clip";
+    scene.parentNode.insertBefore(clip, scene);
+    clip.appendChild(scene);
+
+    function updateScale() {
+      const available = clip.offsetWidth - PADDING;
+      const scale = Math.min(MAX_SCALE, available / SCENE_W);
+      const scaledH = Math.round(SCENE_H * scale);
+
+      scene.style.setProperty("--typing-scale", scale);
+      scene.style.transform = `scale(${scale})`;
+      scene.style.marginBottom = `${(scale - 1) * SCENE_H}px`;
+      clip.style.height = scaledH + "px";
+    }
+
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    ro.observe(clip);
+    window.addEventListener("resize", updateScale);
+  })();
+
+  // 6. tsParticles Initialization
+  const container = document.getElementById("tsparticles");
+  if (container) {
+    const isMobile = window.innerWidth < 820;
+
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      fpsLimit: 60,
+      interactivity: {
+        detectsOn: "window",
+        events: {
+          onHover: {
+            enable: !isMobile,
+            mode: "grab",
+          },
+          resize: true,
+        },
+        modes: {
+          grab: {
+            distance: 180,
+            links: { opacity: 1, color: "#7c3aed" },
+          },
+        },
+      },
+      particles: {
+        color: { value: ["#8b5cf6", "#5bc8f5", "#c4b5fd", "#ffffff"] },
+        links: {
+          color: "#7c3aed",
+          distance: 150,
+          enable: true,
+          opacity: 0.55,
+          width: 1.2,
+        },
+        move: {
+          direction: "none",
+          enable: true,
+          outModes: { default: "bounce" },
+          random: true,
+          speed: 0.9,
+          straight: false,
+        },
+        number: {
+          density: { enable: true, area: 850 },
+          value: isMobile ? 35 : 75,
+        },
+        opacity: {
+          value: { min: 0.5, max: 0.85 },
+          animation: {
+            enable: true,
+            speed: 0.6,
+            minimumValue: 0.3,
+            sync: false,
+          },
+        },
+        shape: { type: "circle" },
+        size: { value: { min: 1.5, max: 3.5 } },
+      },
+      detectRetina: true,
+    });
+  }
 });
