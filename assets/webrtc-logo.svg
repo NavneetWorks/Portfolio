@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="WebRTC logo">
+  <defs>
+    <linearGradient id="g" x1="20" y1="18" x2="108" y2="110" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d1ff"/>
+      <stop offset=".52" stop-color="#7c3cff"/>
+      <stop offset="1" stop-color="#ff4fd8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="54" fill="#111827"/>
+  <path d="M31 77c11-25 21-38 33-38s22 13 33 38" fill="none" stroke="url(#g)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M33 51c9 17 19 38 31 38s22-21 31-38" fill="none" stroke="#35f0c9" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="31" cy="77" r="9" fill="#00d1ff"/>
+  <circle cx="97" cy="77" r="9" fill="#ff4fd8"/>
+  <circle cx="64" cy="39" r="9" fill="#f8fafc"/>
+  <circle cx="64" cy="89" r="9" fill="#35f0c9"/>
+</svg>

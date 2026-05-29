@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio of Navneet Kumar Dubey, Computer Science student and full-stack developer." />
+    <title>Navneet Kumar Dubey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <!-- Particle canvas: sits behind EVERYTHING including the header -->
+    <div id="tsparticles"></div>
+<header class="header" style="position: static;">
+      <a class="logo" href="#home" aria-label="Navneet Kumar Dubey">
+        <span>&lt;</span><strong>Navneet Dubey</strong><span>/&gt;</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Open menu" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav" data-nav>
+        <a href="#skills">Skills</a>
+        <a href="#education">Education</a>
+        <a href="#experience">Work Experiences</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact Me</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme" data-theme-toggle>
+          <span class="toggle-track"><span class="toggle-thumb"><img src="assets/moon.png" alt="" /></span></span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero section" id="home">
+
+        <div class="hero-copy reveal">
+          <h1>
+            Hi, I'm Navneet Kumar Dubey
+            <img class="wave-hand" src="assets/waving-hand.png" alt="" />
+          </h1>
+          <p class="hero-text">
+            Second-year Computer Science student at B.M.S. College of Engineering,
+            building full-stack web apps, Android products, real-time systems,
+            and hackathon projects with practical engineering depth.
+          </p>
+          <p class="hero-text">
+            Focused on Kotlin, TypeScript, React, Node.js, WebRTC, databases,
+            maps, and product ideas that move from prototype to working software.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#contact">Contact Me</a>
+          </div>
+        </div>
+
+        <div class="hero-art reveal" aria-label="Animated developer illustration" style="position: relative;">
+          
+          <svg class="background-clouds" viewBox="0 0 760 640" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+            <g class="cloud-svg cloud-one">
+              <ellipse cx="148" cy="228" rx="90" ry="58" fill="#E0B3FF" />
+              <ellipse cx="90" cy="256" rx="66" ry="46" fill="#E0B3FF" />
+              <ellipse cx="208" cy="258" rx="62" ry="43" fill="#E0B3FF" />
+              <ellipse cx="148" cy="268" rx="94" ry="38" fill="#E0B3FF" />
+            </g>
+            <g class="cloud-svg cloud-two">
+              <ellipse cx="418" cy="468" rx="70" ry="40" fill="#E0B3FF" />
+              <ellipse cx="370" cy="488" rx="50" ry="32" fill="#E0B3FF" />
+              <ellipse cx="466" cy="488" rx="46" ry="30" fill="#E0B3FF" />
+              <ellipse cx="418" cy="496" rx="74" ry="28" fill="#E0B3FF" />
+            </g>
+          </svg>
+
+          <lottie-player 
+            src="assets/coding_boy.json" 
+            background="transparent" 
+            speed="1" 
+            style="width: 100%; height: 100%; position: relative; z-index: 2; left: 40px;" 
+            loop 
+            autoplay>
+          </lottie-player>
+
+        </div>
+      </section>
+
+      <section class="section skills-section" id="skills">
+        <div class="typing-scene reveal" aria-label="Animated typing illustration">
+          <div class="bubble">&lt;/&gt;</div>
+          <div class="desk"></div>
+          <div class="laptop"></div>
+          <div class="chair"></div>
+          <div class="coder">
+            <div class="coder-head"></div>
+            <div class="coder-body"></div>
+            <div class="coder-arm"></div>
+            <div class="coder-hand"></div>
+            <div class="coder-leg"></div>
+          </div>
+          <div class="typing-lines"><span></span><span></span><span></span></div>
+        </div>
+        <div class="skills-copy reveal">
+          <h2>What I Do</h2>
+          <p class="subtitle">CRISP AND EFFICIENT SOFTWARE SOLUTIONS</p>
+          <ul class="feature-list">
+            <li><img src="assets/bolt.png" alt="" /> Full-stack Web Development with React, Node.js, Express and TypeScript</li>
+            <li><img src="assets/bolt.png" alt="" /> Android Development with Kotlin, Jetpack Compose and Room</li>
+            <li><img src="assets/bolt.png" alt="" /> Real-time communication using WebSockets and WebRTC signaling</li>
+            <li><img src="assets/bolt.png" alt="" /> PostgreSQL, Redis, MinIO and API-backed product architecture</li>
+            <li><img src="assets/bolt.png" alt="" /> Maps, geolocation, itinerary planning and AI-assisted civic tools</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section skillset" id="skillset">
+        <h2 class="reveal">Skillset</h2>
+        <div class="skill-category reveal">
+          <h3>Programming Languages</h3>
+          <div class="skill-icons">
+            <span><i class="devicon-c-plain colored"></i><small>C</small></span>
+            <span><i class="devicon-javascript-plain colored"></i><small>JavaScript</small></span>
+            <span><i class="devicon-typescript-plain colored"></i><small>TypeScript</small></span>
+            <span><i class="devicon-python-plain colored"></i><small>Python</small></span>
+            <span><i class="devicon-java-plain colored"></i><small>Java</small></span>
+            <span><i class="devicon-kotlin-plain colored"></i><small>Kotlin</small></span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3>Web &amp; App Development</h3>
+          <div class="skill-icons">
+            <span><i class="devicon-html5-plain colored"></i><small>HTML5</small></span>
+            <span><i class="devicon-css3-plain colored"></i><small>CSS3</small></span>
+            <span><i class="devicon-react-original colored"></i><small>React</small></span>
+            <span><i class="devicon-nodejs-plain colored"></i><small>Node.js</small></span>
+            <span><i class="devicon-express-original"></i><small>Express</small></span>
+            <span><i class="devicon-androidstudio-plain colored"></i><small>Android Studio</small></span>
+            <span><i class="devicon-jetpackcompose-plain colored"></i><small>Compose</small></span>
+            <span><i class="devicon-firebase-plain colored"></i><small>Firebase</small></span>
+          </div>
+        </div>
+        <div class="skill-category reveal">
+          <h3>Tools, Databases &amp; Others</h3>
+          <div class="skill-icons">
+            <span><i class="devicon-git-plain colored"></i><small>Git</small></span>
+            <span><i class="devicon-github-original"></i><small>GitHub</small></span>
+            <span><i class="devicon-vscode-plain colored"></i><small>VS Code</small></span>
+            <span><i class="devicon-docker-plain colored"></i><small>Docker</small></span>
+            <span><i class="devicon-postgresql-plain colored"></i><small>PostgreSQL</small></span>
+            <span><i class="devicon-redis-plain colored"></i><small>Redis</small></span>
+            <span><i class="devicon-linux-plain colored"></i><small>Linux</small></span>
+            <span><img class="skill-logo" src="assets/webrtc-logo.svg" alt="" /><small>WebRTC</small></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section proficiency" id="proficiency">
+        <div class="reveal">
+          <h2>Proficiency</h2>
+          <div class="bar"><p>Frontend/Design</p><span><i style="width: 82%"></i></span></div>
+          <div class="bar"><p>Backend</p><span><i style="width: 78%"></i></span></div>
+          <div class="bar"><p>Programming</p><span><i style="width: 86%"></i></span></div>
+        </div>
+        <div class="proficiency-art reveal" aria-hidden="true">
+          <div class="screen"><span></span><span></span><span></span></div>
+          <div class="robot-arm arm-one"></div>
+          <div class="robot-arm arm-two"></div>
+          <div class="spark"></div>
+        </div>
+      </section>
+
+      <section class="section education" id="education">
+        <h2 class="reveal">Education</h2>
+        <article class="education-row reveal">
+          <div class="school-badge">B</div>
+          <div>
+            <h3>B.M.S. College of Engineering</h3>
+            <h4>B.E. in Computer Science and Engineering</h4>
+            <p>2024 - 2028 - Bengaluru, India</p>
+            <p>
+              Second-year CSE student focused on software engineering, DSA,
+              full-stack systems, Android development, and hackathon-style product building.
+            </p>
+            <ul>
+              <li>Built projects across web apps, Android apps, maps and real-time communication.</li>
+              <li>Practicing DSA consistently through 170+ LeetCode problems.</li>
+              <li>Shortlisted for Athernex Hackathon as a BMSCE participant.</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="experience">
+        <h2 class="reveal">Experiences</h2>
+        <div class="experience-grid">
+          <article class="experience-card reveal">
+            <div class="experience-top purple">
+              <h3>Athernex Hackathon</h3>
+              <p>Shortlisted</p>
+              <div class="experience-logo">AH</div>
+            </div>
+            <h4>AI Civics Mapper</h4>
+            <p class="date">Hackathon Build</p>
+            <ul>
+              <li>Co-developed a civic monitoring platform for detecting potholes and garbage from media.</li>
+              <li>Integrated AI object-detection output with map markers and severity scoring.</li>
+              <li>Built for fast execution under hackathon time pressure.</li>
+            </ul>
+          </article>
+          <article class="experience-card reveal">
+            <div class="experience-top grey">
+              <h3>Open Source</h3>
+              <p>GitHub</p>
+              <div class="experience-logo">GH</div>
+            </div>
+            <h4>Project Builder</h4>
+            <p class="date">NavneetWorks</p>
+            <ul>
+              <li>Maintains and experiments with public projects across web, Android and TypeScript.</li>
+              <li>Uses projects to practice product thinking, architecture, debugging and deployment readiness.</li>
+              <li>Currently keeping live project links paused until final polishing.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="projects">
+        <h2 class="reveal">Projects</h2>
+        <p class="subtitle reveal">SOME PROJECTS THAT I HAVE DONE!</p>
+      <div class="project-grid">
+  <article class="portfolio-card reveal">
+    <div class="project-logo medi">MS</div>
+    <h3>MediSync</h3>
+    <p>Real-time Android telehealth platform for doctor and patient workflows.</p>
+    <a class="button" href="https://github.com/NavneetWorks/MediSync" target="_blank" rel="noreferrer">View on GitHub</a>
+  </article>
+  <article class="portfolio-card reveal">
+    <div class="project-logo voyage">VG</div>
+    <h3>Voyage</h3>
+    <p>Mood-driven travel planner with geolocation, itinerary generation and social groups.</p>
+    <a class="button" href="https://github.com/NavneetWorks/Voyage" target="_blank" rel="noreferrer">View on GitHub</a>
+  </article>
+  <article class="portfolio-card reveal">
+    <div class="project-logo civics">AI</div>
+    <h3>AI Civics Mapper</h3>
+    <p>AI-assisted map tool for detecting civic hazards and assigning severity scores.</p>
+    <button type="button">Details Soon</button>
+  </article>
+  <article class="portfolio-card reveal">
+    <div class="project-logo chess">CH</div>
+    <h3>My Chess Game</h3>
+    <p>Terminal chess engine with native TypeScript rule and board-state logic.</p>
+    <a class="button" href="https://github.com/NavneetWorks/Mychess_game" target="_blank" rel="noreferrer">View on GitHub</a>
+  </article>
+  <article class="portfolio-card reveal">
+    <div class="project-logo uni">UB</div>
+    <h3>Unibene</h3>
+    <p>Discount product discovery website for collecting offers in one place.</p>
+    <a class="button" href="https://github.com/NavneetWorks/Unibene" target="_blank" rel="noreferrer">View on GitHub</a>
+  </article>
+  <article class="portfolio-card reveal">
+    <div class="project-logo video">VC</div>
+    <h3>Video Call Web</h3>
+    <p>Web-based video calling project centered on real-time communication.</p>
+    <a class="button" href="https://github.com/NavneetWorks/Vedio_call_web" target="_blank" rel="noreferrer">View on GitHub</a>
+  </article>
+</div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="contact-copy reveal">
+          <h2>Contact Me <img src="assets/phone.png" alt="" /></h2>
+          <p class="subtitle">DISCUSS A PROJECT OR JUST WANT TO SAY HI? MY INBOX IS OPEN FOR ALL.</p>
+          <a class="email" href="mailto:navneetkumardubey12@gmail.com">navneetkumardubey12@gmail.com</a>
+         <div class="socials">
+  <a href="https://github.com/NavneetWorks" target="_blank" rel="noreferrer" aria-label="GitHub"><i class="devicon-github-original"></i></a>
+  <a href="https://leetcode.com/u/Navneet_dubey/" target="_blank" rel="noreferrer" aria-label="LeetCode">LC</a>
+  <a href="https://www.linkedin.com/in/navneet-kumar-dubey" target="_blank" rel="noreferrer" aria-label="LinkedIn"><i class="devicon-linkedin-plain colored"></i></a>
+</div>
+        </div>
+        <div class="mail-art reveal" aria-hidden="true">
+          <div class="mail-icon"></div>
+          <span class="shape plus">+</span>
+          <span class="shape ring"></span>
+          <span class="shape wavelet">~</span>
+        </div>
+      </section>
+    </main>
+
+    <button class="to-top" type="button" aria-label="Back to top" data-to-top>
+      <img src="assets/waving-hand.png" alt="" />
+    </button>
+
+    <footer>
+      <p>Made by Navneet Kumar Dubey</p>
+    </footer>
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
